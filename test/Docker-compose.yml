@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: test
+      PGDATA: /var/lib/postgresql/data/pgdata
+  nats-server:
+    image: nats-streaming
+    container_name: nats_streaming_server
+    restart: always
+    ports:
+      - 4222:4222
+  app:
+    build: ./
+    depends_on:
+      - db
+      - nats-server
+    container_name: server
+    restart: always
+    ports:
+      - 3000:3000
+    
