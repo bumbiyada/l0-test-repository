@@ -8,8 +8,10 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const conf = "host=localhost port=5432 user=postgres password=123 dbname=test sslmode=disable"
+//const conf = "host=localhost port=5432 user=postgres password=123 dbname=test sslmode=disable"
 
+
+const url = "postgres://postgres:123@localhost:5432/test?sslmode=disable"
 var schema = `
 CREATE TABLE main (
 	idx text,
@@ -24,7 +26,7 @@ type Mystruct struct {
 
 func main() {
 	fmt.Println("starting my application")
-	db, err := sqlx.Connect("postgres", conf)
+	db, err := sqlx.Connect("postgres", url)
 	CheckErr(err, "error while connecting to database")
 	// init db
 	db.MustExec(schema)
