@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:alpine
+    container_name: postgres_test_db
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test
+  nats-server:
+    image: nats-streaming:alpine
+    container_name: nats_streaming_server
+    restart: always
+    ports:
+      - 4222:4222
+  app:
+    build: ./
+    #command: sh ./wait-for db:5432 -- echo "Eficode is accessible over HTTPS"
+    restart: always
+    depends_on:
+      - db
+      - nats-server
+    container_name: app_test
+    ports:
+      - 8080:8080
+  front:
+    build: ./my-app/
+    container_name: frontend
+    ports:
+      - 3000:3000
+  publisher:
+    build: ./publisher/
+    container_name: publisher
+volumes:
+  pgdata:
