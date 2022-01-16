@@ -1,0 +1,190 @@
+CREATE TABLE message (
+  order_uid varchar(20) PRIMARY KEY,
+  track_number varchar(20),
+  entry varchar(20),
+  locale varchar(20),
+  internal_signature varchar(20),
+  customer_id varchar(20),
+  delivery_service varchar(20),
+  shardkey varchar(20),
+  sm_id int4,
+  date_created varchar(20),
+  oof_shard varchar(20)
+);
+
+CREATE TABLE item (
+  chrt_id int8 PRIMARY KEY,
+  track_number varchar(20),
+  price int4,
+  rid varchar(20),
+  name varchar(20),
+  sale int4,
+  size varchar(20),
+  total_price int4,
+  nm_id int8,
+  brand varchar(20),
+  status int2,
+  fk_item varchar(20) REFERENCES message(order_uid)
+);
+CREATE TABLE payment (
+  transaction varchar(20) PRIMARY KEY,
+  request_id varchar(20),
+  currency varchar(20),
+  provider varchar(20),
+  amount int4,
+  payment_id int8,
+  bank varchar(20),
+  delivery_cost int4,
+  goods_total int4,
+  custom_fee int4,
+  fk_payment varchar(20) REFERENCES message(order_uid)
+);
+
+CREATE TABLE delivery (
+  name varchar(64) PRIMARY KEY,
+  phone varchar(16),
+  zip int4,
+  city varchar(32),
+  address varchar(64),
+  region varchar(32),
+  email varchar(64),
+  fk_delivery varchar(20) REFERENCES message(order_uid)
+);
+
+INSERT INTO message 
+    (order_uid, track_number, entry, locale, internal_signature, customer_id, delivery_service, shardkey, sm_id, date_created, oof_shard)
+    VALUES ('id1', 'track1', 'entry', 'test', 'test sign', 'id1', 'DHL', 'shard', 16, 'data', '1');
+INSERT INTO message
+    (order_uid, track_number, entry, locale, internal_signature, customer_id, delivery_service, shardkey, sm_id, date_created, oof_shard)
+    VALUES ('id2', 'track2', 'entry2', 'test', 'test sign', 'id2', 'DHL', 'shard', 16, 'data2', '2');
+
+INSERT INTO payment 
+    (transaction, request_id, currency, provider, amount, payment_id, bank, delivery_cost, goods_total, custom_fee, fk_payment)
+    VALUES ('id1', 'reqid1', 'usd', 'provider', 1, 20, 'bank', 16, 20, 4, 'id1');
+INSERT INTO payment 
+    (transaction, request_id, currency, provider, amount, payment_id, bank, delivery_cost, goods_total, custom_fee, fk_payment)
+    VALUES ('id2', 'reqid2', 'usd', 'provider', 1, 20, 'bank', 16, 20, 4, 'id2');
+
+INSERT INTO item
+    (chrt_id, track_number, price, rid, name, sale, size, total_price, nm_id, brand, status, fk_item)
+    VALUES (20, 'id1', 20, 'rid1', 'name1', 16, 'size', 16, 32, 'brand', 200, 'id1');
+INSERT INTO item
+    (chrt_id, track_number, price, rid, name, sale, size, total_price, nm_id, brand, status, fk_item)
+    VALUES (30, 'id2', 20, 'rid1', 'name1', 16, 'size', 16, 32, 'brand', 200, 'id1');
+INSERT INTO item
+    (chrt_id, track_number, price, rid, name, sale, size, total_price, nm_id, brand, status, fk_item)
+    VALUES (40, 'id1', 20, 'rid1', 'name1', 16, 'size', 16, 32, 'brand', 200, 'id2');
+
+
+INSERT INTO delivery (name, phone, zip, city, address, region, email, fk_delivery)
+    VALUES ('name name', '+799999999', 147420, 'moscow', 'adress', 'region', 'mail@mail', 'id1');
+INSERT INTO delivery (name, phone, zip, city, address, region, email, fk_delivery)
+    VALUES ('name2 name2', '+799999999', 147420, 'moscow2', 'adress2', 'region2', 'mail2@mail2', 'id2');
+
+
+SELECT order_uid FROM message
+
+SELECT
+
+
+// VERSION UPDATED //
+
+CREATE TABLE IF NOT EXISTS message  (
+  order_uid varchar(20) PRIMARY KEY,
+  track_number varchar(20),
+  entry varchar(20),
+  locale varchar(5),
+  internal_signature varchar(20),
+  customer_id varchar(20),
+  delivery_service varchar(20),
+  shardkey varchar(20),
+  sm_id int4,
+  date_created varchar(32),
+  oof_shard varchar(20)
+);
+
+CREATE TABLE IF NOT EXISTS item (
+  chrt_id int8 PRIMARY KEY,
+  track_number varchar(20),
+  price int4,
+  rid varchar(20),
+  name varchar(20),
+  sale int4,
+  size varchar(20),
+  total_price int4,
+  nm_id int8,
+  brand varchar(20),
+  status int2,
+  fk_items varchar(20) REFERENCES message(order_uid)
+);
+CREATE TABLE IF NOT EXISTS payment (
+  payment_id SERIAL PRIMARY KEY,
+  transaction_fk varchar(20) REFERENCES message(order_uid),
+  request_id varchar(20),
+  currency varchar(20),
+  provider varchar(20),
+  amount int4,
+  payment_dt int8,
+  bank varchar(20),
+  delivery_cost int4,
+  goods_total int4,
+  custom_fee int4
+);
+
+
+CREATE TABLE IF NOT EXISTS delivery (
+  delivery_id SERIAL PRIMARY KEY,
+  name varchar(64),
+  phone varchar(16),
+  zip int4,
+  city varchar(32),
+  address varchar(64),
+  region varchar(32),
+  email varchar(64),
+  fk_delivery varchar(20) REFERENCES message(order_uid)
+);
+
+INSERT INTO message 
+    (order_uid, track_number, entry, locale, internal_signature, customer_id, delivery_service, shardkey, sm_id, date_created, oof_shard)
+    VALUES ('id1', 'track1', 'entry', 'test', 'test sign', 'id1', 'DHL', 'shard', 16, 'data', '1');
+INSERT INTO message
+    (order_uid, track_number, entry, locale, internal_signature, customer_id, delivery_service, shardkey, sm_id, date_created, oof_shard)
+    VALUES ('id2', 'track2', 'entry2', 'test', 'test sign', 'id2', 'DHL', 'shard', 16, 'data2', '2');
+
+INSERT INTO payment 
+    (transaction_fk, request_id, currency, provider, amount, payment_dt, bank, delivery_cost, goods_total, custom_fee)
+    VALUES ('id1', 'reqid1', 'usd', 'provider', 1, 20, 'bank', 16, 20, 4);
+INSERT INTO payment 
+    (transaction_fk, request_id, currency, provider, amount, payment_dt, bank, delivery_cost, goods_total, custom_fee)
+    VALUES ('id2', 'reqid2', 'usd', 'provider', 1, 20, 'bank', 16, 20, 4);
+
+INSERT INTO item
+    (chrt_id, track_number, price, rid, name, sale, size, total_price, nm_id, brand, status, fk_item)
+    VALUES (20, 'id1', 20, 'rid1', 'name1', 16, 'size', 16, 32, 'brand', 200, 'id1');
+INSERT INTO item
+    (chrt_id, track_number, price, rid, name, sale, size, total_price, nm_id, brand, status, fk_item)
+    VALUES (30, 'id2', 20, 'rid1', 'name1', 16, 'size', 16, 32, 'brand', 200, 'id1');
+INSERT INTO item
+    (chrt_id, track_number, price, rid, name, sale, size, total_price, nm_id, brand, status, fk_item)
+    VALUES (40, 'id1', 20, 'rid1', 'name1', 16, 'size', 16, 32, 'brand', 200, 'id2');
+
+
+INSERT INTO delivery (name, phone, zip, city, address, region, email, fk_delivery)
+    VALUES ('name name', '+799999999', 147420, 'moscow', 'adress', 'region', 'mail@mail', 'id1');
+INSERT INTO delivery (name, phone, zip, city, address, region, email, fk_delivery)
+    VALUES ('name2 name2', '+799999999', 147420, 'moscow2', 'adress2', 'region2', 'mail2@mail2', 'id2');
+
+
+SELECT order_uid FROM MESSAGE;    
+
+SELECT * FROM message
+JOIN delivery ON message.order_uid = delivery.fk_delivery
+JOIN payment ON message.order_uid = payment.transaction_fk;
+
+
+SELECT message.order_uid, message.track_number, entry, locale,
+internal_signature, customer_id, delivery_service, shardkey, sm_id, date_created, oof_shard,
+request_id, currency, provider, amount, payment_dt, bank, delivery_cost, goods_total, custom_fee,
+delivery.name, phone, zip, city, address, region, email FROM message
+JOIN delivery ON message.order_uid = delivery.fk_delivery
+JOIN payment ON message.order_uid = payment.transaction_fk;
