@@ -8,19 +8,27 @@ function Form({optionMsg, optionErr}) {
   let aboba2 = JSON.parse(aboba)
   //let a = aboba2.map(b => (<li>{b}</li>))
   function testFunc(){
+    const mess = {
+      body: '',
+      error: false
+    }
     setNumbrRequests(nRequests + 1)
     console.log(nRequests)
-    optionMsg(aboba2)
+    let obj = Object.create(mess)
+    obj.body = aboba
+    
     if (nRequests % 2 == 0) {
-      optionErr(true)
+      obj.error = true
+      optionMsg(obj)
     } else {
-      optionErr(false)
+      obj.error = false
+      optionMsg(obj)
     }
     
   }
-  async function postData(){
+  function postData(){
     console.log("button pressed")
-      await Promise.all(fetch('http://localhost:8080', {
+      fetch('http://localhost:8080', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -30,8 +38,8 @@ function Form({optionMsg, optionErr}) {
           id: value
         })
       }).then(response => response.json())
-      .then((resp) => (optionErr(resp.error), optionMsg(JSON.parse(resp.body)), console.log(resp.body), console.log(resp.error)))
-      .then(setTimeout(() => {console.log("!")}, 1000)));
+      .then((resp) => (optionMsg(resp), optionErr(resp.error), console.log(resp), console.log(resp)))
+      .then(setTimeout(() => {console.log("!")}, 1000));
       console.log("REQUESTED" + value);
       //console.log(res);
       
@@ -52,9 +60,11 @@ function Content({message, err}) {
   console.log(err)
   console.log(typeof(message))
   console.log(message)
-  setTimeout(() => { console.log("World!"); }, 2000);
-  if (err === false){
-    let item = message.items[0]
+  console.log(message.body)
+  console.log(message.error)
+  if (message.error === false){
+    let msg = JSON.parse(message.body)
+    let item = msg.items[0]
     console.log(aboba)
     //message = JSON.parse(message)
     return(
@@ -67,17 +77,17 @@ function Content({message, err}) {
             </tr>
           </thead>
           <tbody>
-            <tr><td>ORDER_UID</td><td>{message.order_uid}</td></tr>
-            <tr><td>TRACK_NUMBER</td><td>{message.track_number}</td></tr>
-            <tr><td>ENTRY</td><td>{message.entry}</td></tr>
-            <tr><td>LOCALE</td><td>{message.locale}</td></tr>
-            <tr><td>INTERNAL_SIGNATURE</td><td>{message.internal_signature}</td></tr>
-            <tr><td>CUSTOMER_ID</td><td>{message.customer_id}</td></tr>
-            <tr><td>DELIVERY_SERVICE</td><td>{message.delivery_service}</td></tr>
-            <tr><td>SHARDKEY</td><td>{message.shardkey}</td></tr>
-            <tr><td>SM_ID</td><td>{message.sm_id}</td></tr>
-            <tr><td>DATE_CREATED</td><td>{message.date_created}</td></tr>
-            <tr><td>OOF_SHARD</td><td>{message.oof_shard}</td></tr>
+            <tr><td>ORDER_UID</td><td>{msg.order_uid}</td></tr>
+            <tr><td>TRACK_NUMBER</td><td>{msg.track_number}</td></tr>
+            <tr><td>ENTRY</td><td>{msg.entry}</td></tr>
+            <tr><td>LOCALE</td><td>{msg.locale}</td></tr>
+            <tr><td>INTERNAL_SIGNATURE</td><td>{msg.internal_signature}</td></tr>
+            <tr><td>CUSTOMER_ID</td><td>{msg.customer_id}</td></tr>
+            <tr><td>DELIVERY_SERVICE</td><td>{msg.delivery_service}</td></tr>
+            <tr><td>SHARDKEY</td><td>{msg.shardkey}</td></tr>
+            <tr><td>SM_ID</td><td>{msg.sm_id}</td></tr>
+            <tr><td>DATE_CREATED</td><td>{msg.date_created}</td></tr>
+            <tr><td>OOF_SHARD</td><td>{msg.oof_shard}</td></tr>
 
           </tbody>
         </table>
@@ -89,16 +99,16 @@ function Content({message, err}) {
             </tr>
           </thead>
           <tbody>
-            <tr><td>transaction</td><td>{message.payment.transaction}</td></tr>
-            <tr><td>request_id</td><td>{message.payment.request_id}</td></tr>
-            <tr><td>currency</td><td>{message.payment.currency}</td></tr>
-            <tr><td>provider</td><td>{message.payment.provider}</td></tr>
-            <tr><td>amount</td><td>{message.payment.amount}</td></tr>
-            <tr><td>payment_dt</td><td>{message.payment.payment_dt}</td></tr>
-            <tr><td>bank</td><td>{message.payment.bank}</td></tr>
-            <tr><td>delivery_cost</td><td>{message.payment.delivery_cost}</td></tr>
-            <tr><td>goods_total</td><td>{message.payment.goods_total}</td></tr>
-            <tr><td>custom_fee</td><td>{message.payment.custom_fee}</td></tr>
+            <tr><td>transaction</td><td>{msg.payment.transaction}</td></tr>
+            <tr><td>request_id</td><td>{msg.payment.request_id}</td></tr>
+            <tr><td>currency</td><td>{msg.payment.currency}</td></tr>
+            <tr><td>provider</td><td>{msg.payment.provider}</td></tr>
+            <tr><td>amount</td><td>{msg.payment.amount}</td></tr>
+            <tr><td>payment_dt</td><td>{msg.payment.payment_dt}</td></tr>
+            <tr><td>bank</td><td>{msg.payment.bank}</td></tr>
+            <tr><td>delivery_cost</td><td>{msg.payment.delivery_cost}</td></tr>
+            <tr><td>goods_total</td><td>{msg.payment.goods_total}</td></tr>
+            <tr><td>custom_fee</td><td>{msg.payment.custom_fee}</td></tr>
           </tbody>
         </table>
         DELIVERY
@@ -109,13 +119,13 @@ function Content({message, err}) {
             </tr>
           </thead>
           <tbody>
-            <tr><td>name</td><td>{message.delivery.name}</td></tr>
-            <tr><td>phone</td><td>{message.delivery.phone}</td></tr>
-            <tr><td>zip</td><td>{message.delivery.zip}</td></tr>
-            <tr><td>city</td><td>{message.delivery.city}</td></tr>
-            <tr><td>address</td><td>{message.delivery.address}</td></tr>
-            <tr><td>region</td><td>{message.delivery.region}</td></tr>
-            <tr><td>email</td><td>{message.delivery.email}</td></tr>
+            <tr><td>name</td><td>{msg.delivery.name}</td></tr>
+            <tr><td>phone</td><td>{msg.delivery.phone}</td></tr>
+            <tr><td>zip</td><td>{msg.delivery.zip}</td></tr>
+            <tr><td>city</td><td>{msg.delivery.city}</td></tr>
+            <tr><td>address</td><td>{msg.delivery.address}</td></tr>
+            <tr><td>region</td><td>{msg.delivery.region}</td></tr>
+            <tr><td>email</td><td>{msg.delivery.email}</td></tr>
           </tbody>
         </table>
         ITEM
@@ -130,6 +140,7 @@ function Content({message, err}) {
             <tr><td>track_number</td><td>{item.track_number}</td></tr>
             <tr><td>price</td><td>{item.price}</td></tr>
             <tr><td>rid</td><td>{item.rid}</td></tr>
+            <tr><td>name</td><td>{item.name}</td></tr>
             <tr><td>sale</td><td>{item.sale}</td></tr>
             <tr><td>size</td><td>{item.size}</td></tr>
             <tr><td>total_price</td><td>{item.total_price}</td></tr>
@@ -140,7 +151,7 @@ function Content({message, err}) {
         </table>
       </div>
     )
-  } else if (err === true){
+  } else if (message.error === true){
     //setOrder_uid("")
     return(
       <div>
@@ -153,7 +164,7 @@ function Content({message, err}) {
   </div>)
 }
 function App() {
-  const [message, setMsg] = useState()
+  const [message, setMsg] = useState({})
   const [err, setErr] = useState()
   console.log(err)
   

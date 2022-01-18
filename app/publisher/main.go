@@ -71,7 +71,7 @@ func generateMsg() []byte {
 	}
 	// Struct of PAyment Json
 	type payment struct {
-		Transactrion  string `json:"transactrion"`
+		Transaction   string `json:"transaction"`
 		Request_id    string `json:"request_id"`
 		Currency      string `json:"currency"`
 		Provider      string `json:"provider"`
@@ -109,7 +109,7 @@ func generateMsg() []byte {
 		Customer_id        string   `json:"customer_id"`
 		Delivery_service   string   `json:"delivery_service"`
 		Shardkey           string   `json:"shardkey"`
-		Sm_id              int32    `json:"sm_id`
+		Sm_id              int32    `json:"sm_id"`
 		Date_created       string   `json:"date_created"`
 		Oof_shard          string   `json:"oof_shard"`
 	}
@@ -130,7 +130,7 @@ func generateMsg() []byte {
 	NewMessage.Delivery.Address = AdressName[rand.Intn(len(AdressName))] + " " + strconv.Itoa(rand.Intn(100))
 	NewMessage.Delivery.Region = "Solar system/Earth"
 	NewMessage.Delivery.Email = randStringBytes(8) + "@gmail.com"
-	NewMessage.Payment.Transactrion = NewMessage.Order_uid
+	NewMessage.Payment.Transaction = NewMessage.Order_uid
 	NewMessage.Payment.Request_id = "req_id"
 	NewMessage.Payment.Currency = "USD"
 	NewMessage.Payment.Provider = "wbpay"

@@ -33,7 +33,7 @@ type delivery struct {
 
 // Struct of PAyment Json
 type payment struct {
-	Transactrion  string `json:"transactrion"`
+	Transaction   string `json:"transaction"`
 	Request_id    string `json:"request_id"`
 	Currency      string `json:"currency"`
 	Provider      string `json:"provider"`
@@ -73,7 +73,7 @@ type Mystruct struct {
 	Customer_id        string   `json:"customer_id"`
 	Delivery_service   string   `json:"delivery_service"`
 	Shardkey           string   `json:"shardkey"`
-	Sm_id              int32    `json:"sm_id`
+	Sm_id              int32    `json:"sm_id"`
 	Date_created       string   `json:"date_created"`
 	Oof_shard          string   `json:"oof_shard"`
 }
@@ -326,7 +326,7 @@ func RecoverCache(Db *sqlx.DB) {
 		tmp2.Sm_id = tmp.Sm_id
 		tmp2.Date_created = tmp.Date_created
 		tmp2.Oof_shard = tmp.Oof_shard
-		tmp2.Payment.Transactrion = tmp.Order_uid
+		tmp2.Payment.Transaction = tmp.Order_uid
 		tmp2.Payment.Request_id = tmp.Request_id
 		tmp2.Payment.Currency = tmp.Currency
 		tmp2.Payment.Provider = tmp.Provider
@@ -355,7 +355,7 @@ func RecoverCache(Db *sqlx.DB) {
 func AddToDB(Db *sqlx.DB, msg Mystruct) {
 	tx := Db.MustBegin()
 	tx.MustExec("INSERT INTO message (order_uid, track_number, entry, locale, internal_signature, customer_id, delivery_service, shardkey, sm_id, date_created, oof_shard) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)", msg.Order_uid, msg.Track_number, msg.Entry, msg.Locale, msg.Internal_signature, msg.Customer_id, msg.Delivery_service, msg.Shardkey, msg.Sm_id, msg.Date_created, msg.Oof_shard)
-	tx.MustExec("INSERT INTO payment (transaction_fk, request_id, currency, provider, amount, payment_dt, bank, delivery_cost, goods_total, custom_fee) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)", msg.Payment.Transactrion, msg.Payment.Request_id, msg.Payment.Currency, msg.Payment.Provider, msg.Payment.Amount, msg.Payment.Payment_dt, msg.Payment.Bank, msg.Payment.Delivery_cost, msg.Payment.Goods_total, msg.Payment.Custom_fee)
+	tx.MustExec("INSERT INTO payment (transaction_fk, request_id, currency, provider, amount, payment_dt, bank, delivery_cost, goods_total, custom_fee) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)", msg.Payment.Transaction, msg.Payment.Request_id, msg.Payment.Currency, msg.Payment.Provider, msg.Payment.Amount, msg.Payment.Payment_dt, msg.Payment.Bank, msg.Payment.Delivery_cost, msg.Payment.Goods_total, msg.Payment.Custom_fee)
 	tx.MustExec("INSERT INTO delivery (name, phone, zip, city, address, region, email, fk_delivery) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)", msg.Delivery.Name, msg.Delivery.Phone, msg.Delivery.Zip, msg.Delivery.City, msg.Delivery.Address, msg.Delivery.Region, msg.Delivery.Email, msg.Order_uid)
 	ItemArr := msg.Items
 	for _, item := range ItemArr {
