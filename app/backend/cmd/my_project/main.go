@@ -239,6 +239,7 @@ func HttpListener() {
 			basics.CheckErr(err, "Encoding msg for responce / func HTTP Listener")
 			if resp.Err == true {
 				log.Printf("[HTTP] %s VALUE is NOT in CACHE, sending this info to client", ids)
+				log.Println("[HTTP] MESSAGE = ", string(msg))
 				fmt.Fprintf(w, "%s", msg)
 			} else {
 				log.Printf("[HTTP] %s VALUE is in CACHE, sending this value to client", ids)
@@ -310,6 +311,7 @@ func RecoverCache(Db *sqlx.DB) {
 		// GET data from db.Message, db.Delivery, db.Payment for single ID`s
 		err = Db.Get(&tmp, query, uid)
 		basics.CheckErr(err, "error while Select message/delivery/payment   func = RecoverDb")
+		arr = nil
 		err = Db.Select(&arr, query_items, uid)
 		basics.CheckErr(err, "error while Select items from db.Item   func = RecoverDb")
 		// SET DATA
@@ -324,6 +326,7 @@ func RecoverCache(Db *sqlx.DB) {
 		tmp2.Sm_id = tmp.Sm_id
 		tmp2.Date_created = tmp.Date_created
 		tmp2.Oof_shard = tmp.Oof_shard
+		tmp2.Payment.Transactrion = tmp.Order_uid
 		tmp2.Payment.Request_id = tmp.Request_id
 		tmp2.Payment.Currency = tmp.Currency
 		tmp2.Payment.Provider = tmp.Provider
@@ -402,7 +405,7 @@ func CacheHandler() {
 			if e == notFound {
 				err = true
 			}
-			log.Println("[CACHE] GOT FROM CACHE ", id)
+			log.Println("[CACHE] GOT FROM HTTP-server ", id)
 			var resp Response
 			resp.Resp = val
 			resp.Err = err
